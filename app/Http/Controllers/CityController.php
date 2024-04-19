@@ -11,14 +11,27 @@ class CityController extends Controller
 {
     public function index(Request $request)
     {
-        if (is_null($request['page'])) {
-            return City::all();
+        $cities = City::paginate($request['limit'] ?? 10);
+        if ($request['withCountry'] == 'true') {
+            $cities = $cities->load('country');
         }
-        return City::paginate($request['limit'] ?? 10);
+        if ($request['withStores'] == 'true') {
+            $cities = $cities->load('stores');
+        }
+        if (is_null($cities)) {
+            return response()->json(['message' => 'No city found'], 404);
+        }
+        return $cities;
     }
 
-    public function show($id) {
+    public function show(Request $request, $id) {
         $city = City::find($id);
+        if ($request['withCountry'] == 'true') {
+            $city = $city->load('country');
+        }
+        if ($request['withStores'] == 'true') {
+            $city = $city->load('stores');
+        }
         if (is_null($city)) {
             return response()->json(['message' => 'City not found'], 404);
         }
