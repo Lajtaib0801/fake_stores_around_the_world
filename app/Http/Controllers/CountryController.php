@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 class CountryController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request)         //TODO Search by name, code and continent!
     {
         $countries = Country::paginate($request['limit'] ?? 10);
         if ($request['withCities'] == 'true') {
