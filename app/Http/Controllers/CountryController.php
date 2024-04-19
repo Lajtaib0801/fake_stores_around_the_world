@@ -13,7 +13,7 @@ class CountryController extends Controller
         if ($request['withCities'] == 'true') {
             $countries = $countries->load('cities');
         }
-        if (is_null($countries)) {
+        if (is_null($countries['data'])) {
             return response()->json([
                 'message' => 'Countries not found'
             ], 404);

@@ -16,7 +16,7 @@ class StoreController extends Controller
         if ($request['withCity'] == 'true') {
             $stores = $stores->load('city');
         }
-        if (is_null($stores)) {
+        if (is_null($stores['data'])) {
             return response()->json([
                'message' => 'No store found'
             ], 404);

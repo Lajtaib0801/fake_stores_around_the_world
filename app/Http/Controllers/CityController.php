@@ -18,7 +18,7 @@ class CityController extends Controller
         if ($request['withStores'] == 'true') {
             $cities = $cities->load('stores');
         }
-        if (is_null($cities)) {
+        if (is_null($cities['data'])) {
             return response()->json(['message' => 'No city found'], 404);
         }
         return $cities;
