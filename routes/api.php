@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\CityController;
 use App\Http\Controllers\CountryController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\StoreController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,3 +18,4 @@ use Illuminate\Support\Facades\Route;
 
 Route::resource('country', CountryController::class)->only(['index','show']);
 Route::resource('city', CityController::class)->only(['index','show']);
+Route::apiResource('store', StoreController::class);
