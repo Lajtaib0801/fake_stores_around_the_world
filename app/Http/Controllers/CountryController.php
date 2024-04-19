@@ -9,18 +9,27 @@ class CountryController extends Controller
 {
     public function index(Request $request)
     {
-        if (is_null($request['page'])) {
-            return Country::all();
+        $countries = Country::paginate($request['limit'] ?? 10);
+        if ($request['withCities'] == 'true') {
+            $countries = $countries->load('cities');
         }
-        return Country::paginate($request['limit'] ?? 10);
+        if (is_null($countries)) {
+            return response()->json([
+                'message' => 'Countries not found'
+            ], 404);
+        }
+        return $countries;
     }
 
-    public function show($id)
+    public function show(Request $request, $id)
     {
         $country = Country::find($id);
+        if ($request['withCities'] == 'true') {
+            $country = $country->load('cities');
+        }
         if (is_null($country)) {
             return response()->json([
-               'message' => 'Country not found'
+                'message' => 'Country not found'
             ], 404);
         }
         return $country;
