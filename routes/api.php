@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CityController;
 use App\Http\Controllers\CountryController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -16,3 +17,4 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::resource('country', CountryController::class)->only(['index','show']);
+Route::resource('city', CityController::class)->only(['index','show']);
