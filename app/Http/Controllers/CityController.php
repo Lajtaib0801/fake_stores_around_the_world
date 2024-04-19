@@ -5,11 +5,16 @@ namespace App\Http\Controllers;
 use App\Models\City;
 use Illuminate\Http\Request;
 
+use function PHPUnit\Framework\isEmpty;
+
 class CityController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        return City::all();
+        if (is_null($request['page'])) {
+            return City::all();
+        }
+        return City::paginate($request['limit'] ?? 10);
     }
 
     public function show($id) {
