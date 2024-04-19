@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+
         Country::create(['name' => 'Afghanistan', 'code' => 'AF', 'continent' => 'Asia']);
         Country::create(['name' => 'Aland Islands', 'code' => 'AX', 'continent' => 'Europe']);
         Country::create(['name' => 'Albania', 'code' => 'AL', 'continent' => 'Europe']);
@@ -3516,5 +3517,6 @@ class DatabaseSeeder extends Seeder
         City::create(['name' => "Redcliff", 'country' => 251, 'isCapital' => false]);
         City::create(['name' => "Chiredzi", 'country' => 251, 'isCapital' => false]);
         City::create(['name' => "Karoi", 'country' => 251, 'isCapital' => false]);
+        
     }
 }

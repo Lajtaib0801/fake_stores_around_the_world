@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('cities', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->integer('country');         //TODO add foreign key to countries table
+            $table->foreignId('country')->constrained();
             $table->boolean('isCapital');
         });
     }
