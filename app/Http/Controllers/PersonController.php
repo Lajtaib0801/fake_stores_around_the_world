@@ -32,7 +32,7 @@ class PersonController extends Controller
             $query->where('isMale', $request['isMale']);
         }
         $people = $query->paginate($request['limit'] ?? 10);
-        if (is_null($people['data'])) {
+        if ($people->isEmpty()) {
             return response()->json([
                 'message' => 'No person found'
             ], 404);
