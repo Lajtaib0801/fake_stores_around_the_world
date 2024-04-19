@@ -7,15 +7,12 @@ use Illuminate\Http\Request;
 
 class CountryController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $countries = Country::all();
-        if (is_null($countries)) {
-            return response()->json([
-               'message' => 'No countries found'
-            ], 404);
+        if (is_null($request['page'])) {
+            return Country::all();
         }
-        return $countries;
+        return Country::paginate($request['limit'] ?? 10);
     }
 
     public function show($id)
