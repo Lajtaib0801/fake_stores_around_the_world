@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Person;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class PersonController extends Controller
 {
@@ -35,7 +36,7 @@ class PersonController extends Controller
         if ($people->isEmpty()) {
             return response()->json([
                 'message' => 'No person found'
-            ], 404);
+            ], Response::HTTP_NOT_FOUND);
         }
         return $people;
     }
@@ -57,7 +58,7 @@ class PersonController extends Controller
         if (is_null($person)) {
             return response()->json([
                 'message' => 'Person not found'
-            ], 404);
+            ], Response::HTTP_NOT_FOUND);
         }
         return $person;
     }

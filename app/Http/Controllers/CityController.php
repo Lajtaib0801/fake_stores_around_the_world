@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\City;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 use function PHPUnit\Framework\isEmpty;
 
@@ -26,7 +27,7 @@ class CityController extends Controller
         }
         $cities = $query->paginate($request['limit'] ?? 10);
         if ($cities->isEmpty()) {
-            return response()->json(['message' => 'No city found'], 404);
+            return response()->json(['message' => 'No city found'], Response::HTTP_NOT_FOUND);
         }
         return $cities;
     }
@@ -41,7 +42,7 @@ class CityController extends Controller
             $city = $city->load('stores');
         }
         if (is_null($city)) {
-            return response()->json(['message' => 'City not found'], 404);
+            return response()->json(['message' => 'City not found'], Response::HTTP_NOT_FOUND);
         }
         return $city;
     }

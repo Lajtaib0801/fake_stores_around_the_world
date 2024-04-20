@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\City;
 use App\Models\Store;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class StoreController extends Controller
 {
@@ -22,7 +23,7 @@ class StoreController extends Controller
             if (is_null($cityId)) {
                 return response()->json([
                     'message' => 'City not found'
-                ], 404);
+                ], Response::HTTP_NOT_FOUND);
             }
             $query->where('city', $cityId);
         }
@@ -45,7 +46,7 @@ class StoreController extends Controller
         if ($stores->isEmpty()) {
             return response()->json([
                 'message' => 'No store found'
-            ], 404);
+            ], Response::HTTP_NOT_FOUND);
         }
         return $stores;
     }
@@ -70,7 +71,7 @@ class StoreController extends Controller
         if (is_null($store)) {
             return response()->json([
                 'message' => 'Store not found'
-            ], 404);
+            ], Response::HTTP_NOT_FOUND);
         }
         return $store;
     }

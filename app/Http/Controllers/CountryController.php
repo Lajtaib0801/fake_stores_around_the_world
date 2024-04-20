@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Country;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class CountryController extends Controller
 {
@@ -26,7 +27,7 @@ class CountryController extends Controller
         if ($countries->isEmpty()) {
             return response()->json([
                 'message' => 'Countries not found'
-            ], 404);
+            ], Response::HTTP_NOT_FOUND);
         }
         return $countries;
     }
@@ -40,7 +41,7 @@ class CountryController extends Controller
         if (is_null($country)) {
             return response()->json([
                 'message' => 'Country not found'
-            ], 404);
+            ], Response::HTTP_NOT_FOUND);
         }
         return $country;
     }
