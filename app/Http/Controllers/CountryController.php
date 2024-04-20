@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CountryRequests\GetCountryRequest;
 use App\Models\Country;
-use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class CountryController extends Controller
 {
-    public function index(Request $request)
+    public function index(GetCountryRequest $request)
     {
+        $request->validated();
         $query = Country::query();
         if (!is_null($request['name'])) {
             $query->where('name', 'like', '%'. $request['name']. '%');
@@ -20,7 +21,7 @@ class CountryController extends Controller
         if (!is_null($request['continent'])) {
             $query->where('continent', $request['continent']);
         }
-        if ($request['withCities'] == 'true') {
+        if ($request['withCities'] == true) {
             $query->with('cities');
         }
         $countries = $query->paginate($request['limit'] ?? 10);
@@ -32,10 +33,11 @@ class CountryController extends Controller
         return $countries;
     }
 
-    public function show(Request $request, $id)
+    public function show(GetCountryRequest $request, $id)
     {
+        $request->validated();
         $country = Country::find($id);
-        if ($request['withCities'] == 'true') {
+        if ($request['withCities'] == true) {
             $country = $country->load('cities');
         }
         if (is_null($country)) {
