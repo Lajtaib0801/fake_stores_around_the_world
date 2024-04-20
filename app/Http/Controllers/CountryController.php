@@ -7,12 +7,22 @@ use Illuminate\Http\Request;
 
 class CountryController extends Controller
 {
-    public function index(Request $request)         //TODO Search by name, code and continent!
+    public function index(Request $request)
     {
-        $countries = Country::paginate($request['limit'] ?? 10);
-        if ($request['withCities'] == 'true') {
-            $countries = $countries->load('cities');
+        $query = Country::query();
+        if (!is_null($request['name'])) {
+            $query->where('name', 'like', '%'. $request['name']. '%');
         }
+        if (!is_null($request['code'])) {
+            $query->where('code', 'like', '%'. $request['code']. '%');
+        }
+        if (!is_null($request['continent'])) {
+            $query->where('continent', $request['continent']);
+        }
+        if ($request['withCities'] == 'true') {
+            $query->with('cities');
+        }
+        $countries = $query->paginate($request['limit'] ?? 10);
         if ($countries->isEmpty()) {
             return response()->json([
                 'message' => 'Countries not found'
