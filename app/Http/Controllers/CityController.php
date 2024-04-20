@@ -6,8 +6,6 @@ use App\Models\City;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-use function PHPUnit\Framework\isEmpty;
-
 class CityController extends Controller
 {
     public function index(Request $request)
