@@ -11,20 +11,28 @@ class CityController extends Controller
 {
     public function index(Request $request)
     {
-        $cities = City::paginate($request['limit'] ?? 10);
+        $query = City::query();
+        if ($request['name']) {
+            $query = $query->where('name', 'like', '%' . $request['name'] . '%');
+        }
+        if ($request['isCapital'] == 'true') {
+            $query = $query->where('isCapital', true);
+        }
         if ($request['withCountry'] == 'true') {
-            $cities = $cities->load('country');
+            $query->with('country');
         }
         if ($request['withStores'] == 'true') {
-            $cities = $cities->load('stores');
+            $query->with('stores');
         }
+        $cities = $query->paginate($request['limit'] ?? 10);
         if ($cities->isEmpty()) {
             return response()->json(['message' => 'No city found'], 404);
         }
         return $cities;
     }
 
-    public function show(Request $request, $id) {
+    public function show(Request $request, $id)
+    {
         $city = City::find($id);
         if ($request['withCountry'] == 'true') {
             $city = $city->load('country');
