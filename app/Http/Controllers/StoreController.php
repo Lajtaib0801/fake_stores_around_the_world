@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreRequests\IndexStoreRequest;
+use App\Http\Requests\StoreRequests\ShowStoreRequest;
 use App\Models\City;
 use App\Models\Store;
 use Illuminate\Http\Request;
@@ -12,8 +14,9 @@ class StoreController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index(IndexStoreRequest $request)
     {
+        $request->validated();
         $query = Store::query();
         if (!is_null($request['name'])) {
             $query->where('name', 'like', '%' . $request['name'] . '%');
@@ -39,7 +42,7 @@ class StoreController extends Controller
         if (!is_null($request['closingTime'])) {
             $query->where('closingTime', $request['closingTime']);
         }
-        if ($request['withCity'] == 'true') {
+        if ($request['withCity'] == true) {
             $query->with('city');
         }
         $stores = $query->paginate($request['limit'] ?? 10);
@@ -62,10 +65,11 @@ class StoreController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Request $request, $id)
+    public function show(ShowStoreRequest $request, $id)
     {
+        $request->validated();
         $store = Store::find($id);
-        if ($request['withCity'] == 'true') {
+        if ($request['withCity'] == true) {
             $store = $store->load('city');
         }
         if (is_null($store)) {

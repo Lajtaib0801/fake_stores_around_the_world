@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\CountryRequests\GetCountryRequest;
+use App\Http\Requests\CountryRequests\IndexCountryRequest;
+use App\Http\Requests\CountryRequests\ShowCountryRequest;
 use App\Models\Country;
 use Symfony\Component\HttpFoundation\Response;
 
 class CountryController extends Controller
 {
-    public function index(GetCountryRequest $request)
+    public function index(IndexCountryRequest $request)
     {
         $request->validated();
         $query = Country::query();
@@ -33,7 +34,7 @@ class CountryController extends Controller
         return $countries;
     }
 
-    public function show(GetCountryRequest $request, $id)
+    public function show(ShowCountryRequest $request, $id)
     {
         $request->validated();
         $country = Country::find($id);
