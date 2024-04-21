@@ -22,7 +22,13 @@ class StoreStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //TODO add validation rules here
+            'name' => 'required|string|min:2|max:255',
+            'city' => 'required|integer|exists:cities,id',
+            'address' => 'required|string|min:5|max:255|unique:stores,address',
+            'foundedDate' => 'nullable|date',
+            'openingTime' => 'nullable|date_format:H:i:s',
+            'closingTime' => 'nullable|date_format:H:i:s',
+            'picture' => 'nullable|string|min:1|max:255|image',
         ];
     }
 }

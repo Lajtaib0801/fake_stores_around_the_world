@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreRequests\IndexStoreRequest;
 use App\Http\Requests\StoreRequests\ShowStoreRequest;
+use App\Http\Requests\StoreRequests\StoreStoreRequest;
 use App\Models\City;
 use App\Models\Store;
 use Illuminate\Http\Request;
@@ -57,9 +58,11 @@ class StoreController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreStoreRequest $request)
     {
-        //
+        $request->validated();
+        Store::create($request->all());
+        return response()->noContent();
     }
 
     /**
