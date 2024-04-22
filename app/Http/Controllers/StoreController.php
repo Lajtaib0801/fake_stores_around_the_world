@@ -88,7 +88,7 @@ class StoreController extends Controller
      */
     public function update(Request $request, Store $store)
     {
-        //
+        //TODO update and destroy methods to be implemented
     }
 
     /**
