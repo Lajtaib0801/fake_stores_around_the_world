@@ -13,19 +13,25 @@ class CountryController extends Controller
     {
         $request->validated();
         $query = Country::query();
-        if (!is_null($request['name'])) {
-            $query->where('name', 'like', '%'. $request['name']. '%');
+
+        if ($request->query('name')) {
+            $query->where('name', 'like', '%' . $request->query('name') . '%');
         }
-        if (!is_null($request['code'])) {
-            $query->where('code', 'like', '%'. $request['code']. '%');
+
+        if ($request->query('code')) {
+            $query->where('code', 'like', '%' . $request->query('code') . '%');
         }
-        if (!is_null($request['continent'])) {
-            $query->where('continent', $request['continent']);
+
+        if ($request->query('continent')) {
+            $query->where('continent', $request->query('continent'));
         }
-        if ($request['withCities'] == true) {
+
+        if ($request->query('withCities') == true) {
             $query->with('cities');
         }
-        $countries = $query->paginate($request['limit'] ?? 10);
+
+        $countries = $query->paginate($request->query('limit', 10));
+
         if ($countries->isEmpty()) {
             return response()->json([
                 'message' => 'Countries not found'
@@ -38,7 +44,7 @@ class CountryController extends Controller
     {
         $request->validated();
         $country = Country::find($id);
-        if ($request['withCities'] == true) {
+        if ($request->query('withCities') == true) {
             $country = $country->load('cities');
         }
         if (is_null($country)) {

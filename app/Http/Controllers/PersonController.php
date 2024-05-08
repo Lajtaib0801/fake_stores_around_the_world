@@ -14,25 +14,33 @@ class PersonController extends Controller
     public function index(Request $request)
     {
         $query = Person::query();
-        if (!is_null($request['name'])) {
-            $query->where('name', 'like', '%'. $request['name'] . '%');
+
+        if ($request->query('name')) {
+            $query->where('name', 'like', '%' . $request->query('name') . '%');
         }
-        if (!is_null($request['email'])) {
-            $query->where('email', 'like', '%'. $request['email'] . '%');
+
+        if ($request->query('email')) {
+            $query->where('email', 'like', '%' . $request->query('email') . '%');
         }
-        if (!is_null($request['birthday'])) {
-            $query->where('birthday', $request['birthday']);
+
+        if ($request->query('birthday')) {
+            $query->where('birthday', $request->query('birthday'));
         }
-        if (!is_null($request['phone'])) {
-            $query->where('phone', $request['phone']);
+
+        if ($request->query('phone')) {
+            $query->where('phone', $request->query('phone'));
         }
-        if (!is_null($request['address'])) {
-            $query->where('address', 'like', '%'. $request['address'] . '%');
+
+        if ($request->query('address')) {
+            $query->where('address', 'like', '%' . $request->query('address') . '%');
         }
-        if (!is_null($request['isMale'])) {
-            $query->where('isMale', $request['isMale']);
+
+        if ($request->query('isMale')) {
+            $query->where('isMale', $request->query('isMale'));
         }
-        $people = $query->paginate($request['limit'] ?? 10);
+
+        $people = $query->paginate($request->query('limit', 10));
+
         if ($people->isEmpty()) {
             return response()->json([
                 'message' => 'No person found'

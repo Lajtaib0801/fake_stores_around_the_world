@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreRequests\IndexStoreRequest;
 use App\Http\Requests\StoreRequests\ShowStoreRequest;
 use App\Http\Requests\StoreRequests\StoreStoreRequest;
+use App\Http\Requests\StoreRequests\UpdateStoreRequest;
 use App\Models\City;
 use App\Models\Store;
 use Illuminate\Http\Request;
@@ -19,34 +20,38 @@ class StoreController extends Controller
     {
         $request->validated();
         $query = Store::query();
-        if (!is_null($request['name'])) {
-            $query->where('name', 'like', '%' . $request['name'] . '%');
+        if ($request->query('name')) {
+            $query->where('name', 'like', '%' . $request->query('name') . '%');
         }
-        if (!is_null($request['city'])) {
-            $cityId = City::where('name', $request['city'])->first()?->id;
-            if (is_null($cityId)) {
-                return response()->json([
-                    'message' => 'City not found'
-                ], Response::HTTP_NOT_FOUND);
-            }
-            $query->where('city', $cityId);
+
+        if ($request->query('city')) {
+            $query->whereHas('city', function ($cityQuery) use ($request) {
+                $cityQuery->where('name', $request->query('city'));
+            });
         }
-        if (!is_null($request['address'])) {
-            $query->where('address', 'like', '%' . $request['address'] . '%');
+
+        if ($request->query('address')) {
+            $query->where('address', 'like', '%' . $request->query('address') . '%');
         }
-        if (!is_null($request['foundedDate'])) {
-            $query->where('foundedDate', $request['foundedDate']);
+
+        if ($request->query('foundedDate')) {
+            $query->where('foundedDate', $request->query('foundedDate'));
         }
-        if (!is_null($request['openingTime'])) {
-            $query->where('openingTime', $request['openingTime']);
+
+        if ($request->query('openingTime')) {
+            $query->where('openingTime', $request->query('openingTime'));
         }
-        if (!is_null($request['closingTime'])) {
-            $query->where('closingTime', $request['closingTime']);
+
+        if ($request->query('closingTime')) {
+            $query->where('closingTime', $request->query('closingTime'));
         }
-        if ($request['withCity'] == true) {
+
+        if ($request->query('withCity') == true) {
             $query->with('city');
         }
-        $stores = $query->paginate($request['limit'] ?? 10);
+
+        $stores = $query->paginate($request->query('limit', 10));
+
         if ($stores->isEmpty()) {
             return response()->json([
                 'message' => 'No store found'
@@ -72,7 +77,7 @@ class StoreController extends Controller
     {
         $request->validated();
         $store = Store::find($id);
-        if ($request['withCity'] == true) {
+        if ($request->query('withCity') == true) {
             $store = $store->load('city');
         }
         if (is_null($store)) {
@@ -86,9 +91,17 @@ class StoreController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Store $store)
+    public function update(UpdateStoreRequest $request, Store $store)
     {
-        //TODO update and destroy methods to be implemented
+        $request->validated();
+        return $store->update($request->all());
+        // return $updatedStore;
+        // if ($updatedStore) {
+        //     return response()->noContent();
+        // }
+        // return response()->json([
+        //     'message' => 'No store found to be updated'
+        // ], Response::HTTP_NOT_FOUND);
     }
 
     /**
